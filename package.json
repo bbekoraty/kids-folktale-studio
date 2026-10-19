@@ -2,7 +2,7 @@
   "name": "kids-folktale-studio",
   "version": "0.1.0",
   "private": true,
-  "description": "Fufu Tales — Thai folktales for kids, rendered with Remotion in many languages",
+  "description": "Fufu Tales \u2014 Thai folktales for kids, rendered with Remotion in many languages",
   "scripts": {
     "dev": "remotion studio",
     "tts": "tsx scripts/tts.ts",
@@ -25,5 +25,8 @@
     "music-metadata": "^11.0.0",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2"
+  },
+  "engines": {
+    "node": ">=20 <25"
   }
 }
