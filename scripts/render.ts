@@ -22,8 +22,11 @@ const arg = (name: string) => {
 const storyIds = arg("story") ? [arg("story")!] : STORIES.map((s) => s.id);
 const langs = (arg("lang") ? arg("lang")!.split(",") : LANG_CODES) as LangCode[];
 const formats = args.includes("--short") ? ["short"] : args.includes("--long") ? ["long"] : ["long", "short"];
-const OWN = ["--story", "--lang", "--short", "--long"];
-const passthrough = args.filter((a, i) => a.startsWith("--") && !OWN.includes(a) && !OWN.includes(args[i - 1] ?? ""));
+const OWN_FLAGS = ["--short", "--long"];
+const OWN_WITH_VALUE = ["--story", "--lang"];
+const passthrough = args.filter(
+  (a, i) => a.startsWith("--") && !OWN_FLAGS.includes(a) && !OWN_WITH_VALUE.includes(a) && !OWN_WITH_VALUE.includes(args[i - 1] ?? ""),
+);
 const browser = process.env.REMOTION_BROWSER ? [`--browser-executable=${process.env.REMOTION_BROWSER}`] : [];
 
 mkdirSync("out", { recursive: true });
