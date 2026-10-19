@@ -28,6 +28,8 @@ npm run render -- --story rabbit-in-the-moon        # เรนเดอร์ 1
 | คำสั่ง | ใช้ทำอะไร |
 | --- | --- |
 | `npm run tts -- --story <id> --lang th` | สร้างเสียงเฉพาะภาษา (บรรทัดที่ไม่เปลี่ยนจะข้าม ไม่เสียเงินซ้ำ) |
+| `npm run voices -- --lang th` | ทดลองฟังเสียง Chirp 3 HD ทั้ง 30 เสียง แล้วเปิด `out/voices/th/index.html` เลือกเสียง |
+| `npm run music` | สร้างดนตรีประกอบและเสียงเอฟเฟกต์ใหม่ (ต้องมี Python + numpy + scipy + ffmpeg) |
 | `npm run tts -- --story <id> --provider elevenlabs --force` | เปลี่ยนผู้ให้บริการเสียง และสร้างใหม่ทั้งหมด |
 | `npm run render -- --story <id> --lang en --short` | เรนเดอร์เฉพาะ Shorts ภาษาเดียว |
 | `npm run still -- <composition-id> 120 900` | เรนเดอร์ภาพนิ่งเพื่อตรวจฉาก |
@@ -62,10 +64,19 @@ scripts/                  tts / render / still
 3. เพิ่มเสียงใน `config/voices.json`
 4. เพิ่มคำบนจอใน `src/config/ui.ts`
 
+## ดนตรีประกอบ เอฟเฟกต์ และการเปลี่ยนฉาก
+
+- ดนตรีและเสียงเอฟเฟกต์ทั้งหมดสร้างจากโค้ด (`scripts/music/generate.py`) ไม่ใช้ไฟล์เสียงของคนอื่น จึงไม่ติดลิขสิทธิ์หรือ Content ID
+- เครื่องดนตรีเลียนแบบวงไทย: ระนาด ฆ้องวง ขิม ฉิ่ง โทน ใช้บันไดเสียงเพนทาโทนิก
+- เพลงเลือกตามฉากหลังอัตโนมัติ (`src/config/music.ts`) เช่น ป่ากลางวัน → `day`, คืนพระจันทร์ → `night` หรือกำหนดเองในบทด้วย `"music": "magic"`
+- เพลงจะลดเสียงลงเองตอนมีคนพูด (ducking) ปรับระดับได้ใน `MIX`
+- การเปลี่ยนฉาก: เมฆเลื่อนผ่าน (`cloud`), วงกลมขยาย (`iris`), วงกลมประกายดาว (`sparkle`) เลือกอัตโนมัติ หรือกำหนดในบทด้วย `"transition": "iris"`
+
 ## TTS
 
 - **Google Cloud TTS** (ค่าเริ่มต้น): เปิด Text-to-Speech API แล้วสร้าง API key ใส่ `GOOGLE_TTS_API_KEY`
-  ชื่อเสียงใน `config/voices.json` เป็นค่าเริ่มต้น ควรลองฟังแล้วเลือกเสียงที่ชอบจาก [รายชื่อเสียง](https://cloud.google.com/text-to-speech/docs/voices)
+  ใช้เสียง **Chirp 3 HD** ที่เป็นธรรมชาติกว่าเสียง Standard มาก ตัวละครแต่ละตัวใช้เสียงต่างกัน ตั้งค่าใน `config/voices.json`
+  ใส่ `...` ในบทเพื่อให้ผู้เล่าเว้นจังหวะหายใจ
 - **ElevenLabs**: ใส่ `ELEVENLABS_API_KEY` และ voice id ใน `config/voices.json`
   ตรวจว่าโมเดลที่เลือก (`ELEVENLABS_MODEL_ID`) รองรับภาษาไทยก่อนใช้
 

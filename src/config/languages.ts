@@ -15,7 +15,11 @@ export type LangCode = keyof typeof LANGUAGES;
 export const LANG_CODES = Object.keys(LANGUAGES) as LangCode[];
 
 export const FPS = 30;
-/** Silence after each line, seconds. */
-export const LINE_GAP = 0.45;
+/** Silence after each line, seconds (storytelling pace for young kids). */
+export const LINE_GAP = 0.7;
+/** Extra silence when the next line is a different speaker, seconds. */
+export const SPEAKER_CHANGE_GAP = 0.35;
 /** Breathing room at the start and end of each scene, seconds. */
-export const SCENE_PAD = 0.6;
+export const SCENE_PAD = 0.9;
+/** Scene-to-scene transition length, seconds (scenes overlap by this much). */
+export const TRANSITION = 0.9;

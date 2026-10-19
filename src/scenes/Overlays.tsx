@@ -95,7 +95,7 @@ export const TitleCard: React.FC<{
         }}
       >
         {label ? (
-          <div style={{ fontSize: size * 0.42, color: C.pink, fontWeight: 700, marginBottom: 4 }}>{label}</div>
+          <div style={{ fontSize: size * 0.5, color: C.pink, fontWeight: 700, marginBottom: 4 }}>{label}</div>
         ) : null}
         <div style={{ fontSize: size, fontWeight: 700, lineHeight: 1.25 }}>{text}</div>
       </div>

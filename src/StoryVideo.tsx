@@ -11,7 +11,9 @@ import {
   Sequence,
   staticFile,
 } from "remotion";
-import { FPS, LINE_GAP } from "./config/languages";
+import { FPS, LINE_GAP, TRANSITION } from "./config/languages";
+import { Soundtrack } from "./audio/Soundtrack";
+import { autoTransition, SceneTransition } from "./scenes/Transition";
 import { C } from "./config/palette";
 import { buildTiming, loadManifest } from "./lib/timing";
 import type { StoryProps } from "./lib/types";
@@ -39,17 +41,28 @@ export const StoryVideo: React.FC<StoryProps> = ({ storyId, lang, format, timing
 
   return (
     <AbsoluteFill style={{ backgroundColor: C.cream }}>
-      {timing.scenes.map((st) => {
+      {timing.scenes.map((st, i) => {
         const scene = story.scenes.find((s) => s.id === st.id)!;
+        const prev = i > 0 ? story.scenes.find((s) => s.id === timing.scenes[i - 1].id) : undefined;
+        const kind = i === 0 ? null : (scene.transition ?? autoTransition(prev?.background, scene.background, scene.id));
         const lines = timing.lines
           .filter((l) => l.sceneId === st.id)
           .map((l) => ({ ...l, start: l.start - st.start }));
         return (
           <Sequence key={st.id} from={st.start} durationInFrames={st.duration} name={st.id}>
-            <SceneView story={story} scene={scene} lang={lang} format={format} lines={lines} duration={st.duration} />
+            <SceneTransition
+              kind={kind}
+              length={Math.round(TRANSITION * FPS)}
+              sceneDuration={st.duration}
+              isFirst={i === 0}
+              isLast={i === timing.scenes.length - 1}
+            >
+              <SceneView story={story} scene={scene} lang={lang} format={format} lines={lines} duration={st.duration} />
+            </SceneTransition>
           </Sequence>
         );
       })}
+      <Soundtrack story={story} timing={timing} />
       {timing.lines
         .filter((l) => l.audio)
         .map((l) => (

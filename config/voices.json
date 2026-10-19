@@ -1,23 +1,25 @@
 {
-  "_note": "Voice per provider → language → speaker. 'default' is used for any speaker not listed. Google voice names: https://cloud.google.com/text-to-speech/docs/voices — ElevenLabs voice ids come from your ElevenLabs voice library.",
+  "_note": "Voice per provider → language → speaker. 'default' is used for any speaker not listed. Google Chirp 3 HD voices sound much more natural than Standard voices; they do not support pitch, so each character gets its own voice instead. Try voices with `npm run voices -- --lang th`, then put the names you like here. List: https://cloud.google.com/text-to-speech/docs/chirp3-hd",
   "google": {
     "en": {
-      "default": { "name": "en-US-Neural2-F", "pitch": 2, "rate": 0.95 },
-      "fufu": { "name": "en-US-Neural2-F", "pitch": 3, "rate": 0.95 },
-      "rabbit": { "name": "en-US-Neural2-H", "pitch": 5, "rate": 1.0 },
-      "monkey": { "name": "en-US-Neural2-I", "pitch": 4, "rate": 1.05 },
-      "otter": { "name": "en-US-Neural2-C", "pitch": 3, "rate": 1.0 },
-      "jackal": { "name": "en-US-Neural2-D", "pitch": 2, "rate": 1.0 },
-      "oldman": { "name": "en-US-Neural2-J", "pitch": -4, "rate": 0.88 },
-      "phra-in": { "name": "en-US-Neural2-J", "pitch": -3, "rate": 0.9 }
+      "default": { "name": "en-US-Chirp3-HD-Leda", "rate": 0.95 },
+      "fufu": { "name": "en-US-Chirp3-HD-Leda", "rate": 0.95 },
+      "rabbit": { "name": "en-US-Chirp3-HD-Autonoe", "rate": 1.0 },
+      "monkey": { "name": "en-US-Chirp3-HD-Fenrir", "rate": 1.0 },
+      "otter": { "name": "en-US-Chirp3-HD-Sadachbia", "rate": 1.0 },
+      "jackal": { "name": "en-US-Chirp3-HD-Umbriel", "rate": 1.0 },
+      "oldman": { "name": "en-US-Chirp3-HD-Algenib", "rate": 0.88 },
+      "phra-in": { "name": "en-US-Chirp3-HD-Alnilam", "rate": 0.9 }
     },
     "th": {
-      "default": { "name": "th-TH-Standard-A", "pitch": 2, "rate": 0.95 },
-      "fufu": { "name": "th-TH-Standard-A", "pitch": 3, "rate": 0.95 },
-      "rabbit": { "name": "th-TH-Standard-A", "pitch": 6, "rate": 1.0 },
-      "monkey": { "name": "th-TH-Standard-A", "pitch": 4, "rate": 1.05 },
-      "oldman": { "name": "th-TH-Standard-A", "pitch": -6, "rate": 0.85 },
-      "phra-in": { "name": "th-TH-Standard-A", "pitch": -5, "rate": 0.88 }
+      "default": { "name": "th-TH-Chirp3-HD-Leda", "rate": 0.92 },
+      "fufu": { "name": "th-TH-Chirp3-HD-Leda", "rate": 0.92 },
+      "rabbit": { "name": "th-TH-Chirp3-HD-Autonoe", "rate": 0.95 },
+      "monkey": { "name": "th-TH-Chirp3-HD-Fenrir", "rate": 0.95 },
+      "otter": { "name": "th-TH-Chirp3-HD-Sadachbia", "rate": 0.95 },
+      "jackal": { "name": "th-TH-Chirp3-HD-Umbriel", "rate": 0.95 },
+      "oldman": { "name": "th-TH-Chirp3-HD-Algenib", "rate": 0.85 },
+      "phra-in": { "name": "th-TH-Chirp3-HD-Alnilam", "rate": 0.88 }
     }
   },
   "elevenlabs": {

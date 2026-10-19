@@ -2,10 +2,12 @@
   "name": "kids-folktale-studio",
   "version": "0.1.0",
   "private": true,
-  "description": "Fufu Tales \u2014 Thai folktales for kids, rendered with Remotion in many languages",
+  "description": "Fufu Tales — Thai folktales for kids, rendered with Remotion in many languages",
   "scripts": {
     "dev": "remotion studio",
     "tts": "tsx scripts/tts.ts",
+    "voices": "tsx scripts/voices.ts",
+    "music": "python3 scripts/music/generate.py",
     "render": "tsx scripts/render.ts",
     "still": "tsx scripts/still.ts",
     "typecheck": "tsc --noEmit"

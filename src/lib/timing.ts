@@ -1,5 +1,5 @@
 import { staticFile } from "remotion";
-import { FPS, LANGUAGES, LINE_GAP, SCENE_PAD, type LangCode } from "../config/languages";
+import { FPS, LANGUAGES, LINE_GAP, SCENE_PAD, SPEAKER_CHANGE_GAP, TRANSITION, type LangCode } from "../config/languages";
 import { t } from "./text";
 import type { LineTiming, SceneTiming, Story } from "./types";
 
@@ -41,16 +41,18 @@ export const buildTiming = (
   const lines: LineTiming[] = [];
   const pad = Math.round(SCENE_PAD * FPS);
   const gap = Math.round(LINE_GAP * FPS);
+  const speakerGap = Math.round(SPEAKER_CHANGE_GAP * FPS);
+  const overlap = Math.round(TRANSITION * FPS);
   let cursor = 0;
 
-  const chosen = sceneIds
-    ? story.scenes.filter((s) => sceneIds.includes(s.id))
-    : story.scenes;
+  const chosen = sceneIds ? story.scenes.filter((s) => sceneIds.includes(s.id)) : story.scenes;
 
-  for (const scene of chosen) {
+  chosen.forEach((scene, si) => {
+    // Each scene after the first starts during the previous one's tail, so the transition overlaps.
+    if (si > 0) cursor -= overlap;
     const sceneStart = cursor;
     cursor += pad;
-    for (const line of scene.lines) {
+    scene.lines.forEach((line, li) => {
       const entry = manifest?.lines[line.id];
       const seconds = entry ? entry.duration : estimateSeconds(t(line.text, lang), lang);
       const duration = Math.ceil(seconds * FPS);
@@ -61,11 +63,12 @@ export const buildTiming = (
         duration,
         audio: entry ? `audio/${story.id}/${lang}/${entry.file}` : null,
       });
-      cursor += duration + gap;
-    }
+      const next = scene.lines[li + 1];
+      cursor += duration + (next ? gap + (next.speaker !== line.speaker ? speakerGap : 0) : Math.round(gap / 2));
+    });
     cursor += pad;
     scenes.push({ id: scene.id, start: sceneStart, duration: cursor - sceneStart });
-  }
+  });
 
-  return { scenes, lines, total: cursor };
+  return { scenes, lines, total: cursor, transition: overlap };
 };

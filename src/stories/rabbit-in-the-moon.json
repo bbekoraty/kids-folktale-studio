@@ -6,7 +6,7 @@
   },
   "moral": {
     "en": "Kindness doesn't have to be big. Giving with your whole heart is the greatest gift.",
-    "th": "ความดีไม่ต้องยิ่งใหญ่ การให้ด้วยใจทั้งหมดของเรา คือของขวัญที่ดีที่สุด"
+    "th": "ความดีไม่ต้องยิ่งใหญ่ การให้ด้วยหัวใจทั้งหมดของเรา คือของขวัญที่ดีที่สุด"
   },
   "shortScenes": [
     "gift",
@@ -35,8 +35,8 @@
           "id": "intro-1",
           "speaker": "fufu",
           "text": {
-            "en": "Sawasdee, friends! I'm Fufu. Today's story comes from Thailand. It's called The Rabbit in the Moon!",
-            "th": "สวัสดีจ้าเพื่อนๆ ฟูฟูเองนะ วันนี้ฟูฟูมีนิทานจากเมืองไทยมาเล่า ชื่อเรื่องว่า กระต่ายในดวงจันทร์"
+            "en": "Sawasdee, friends! It's me, Fufu! Today I have a folktale from Thailand for you. It's called... The Rabbit in the Moon!",
+            "th": "สวัสดีจ้า เพื่อนๆ ทุกคน... ฟูฟูเองนะ! วันนี้ฟูฟูมีนิทานพื้นบ้านของเมืองไทยมาเล่าให้ฟัง ชื่อเรื่องว่า... กระต่ายในดวงจันทร์"
           }
         },
         {
@@ -44,7 +44,7 @@
           "speaker": "fufu",
           "text": {
             "en": "Have you ever looked at the full moon and seen a little rabbit? Let's find out why!",
-            "th": "เพื่อนๆ เคยมองพระจันทร์เต็มดวง แล้วเห็นกระต่ายตัวเล็กๆ ไหม ไปดูกันว่าทำไม"
+            "th": "เพื่อนๆ เคยมองพระจันทร์ตอนเต็มดวงไหม... แล้วเห็นเป็นรูปกระต่ายตัวเล็กๆ หรือเปล่า? ไปฟังกันเลยว่าทำไม"
           }
         }
       ]
@@ -85,7 +85,7 @@
           "speaker": "fufu",
           "text": {
             "en": "Long ago, in a quiet forest by a river, lived four best friends: a Rabbit, a Monkey, an Otter and a Jackal.",
-            "th": "นานมาแล้ว ในป่าเงียบสงบริมแม่น้ำ มีเพื่อนรักสี่ตัว คือ กระต่าย ลิง นาก และหมาจิ้งจอก"
+            "th": "นานมาแล้ว... ในป่าเงียบสงบริมแม่น้ำ มีเพื่อนรักอยู่สี่ตัว คือ กระต่าย ลิง นาก และหมาจิ้งจอก"
           }
         },
         {
@@ -93,7 +93,7 @@
           "speaker": "fufu",
           "text": {
             "en": "Every day they played together, and they always tried to be kind.",
-            "th": "ทุกวันพวกเขาเล่นด้วยกัน และพยายามทำดีต่อกันเสมอ"
+            "th": "ทั้งสี่ตัวเล่นด้วยกันทุกวัน และคอยช่วยเหลือกันเสมอ"
           }
         }
       ]
@@ -135,7 +135,7 @@
           "speaker": "fufu",
           "text": {
             "en": "One evening, the moon was big and bright. The Rabbit had an idea.",
-            "th": "เย็นวันหนึ่ง พระจันทร์ดวงโตสว่างไสว กระต่ายนึกอะไรขึ้นมาได้"
+            "th": "เย็นวันหนึ่ง พระจันทร์ดวงโตลอยขึ้นมาสว่างไสว... กระต่ายน้อยก็นึกอะไรขึ้นมาได้"
           }
         },
         {
@@ -143,7 +143,7 @@
           "speaker": "rabbit",
           "text": {
             "en": "Tomorrow is a special day. Let's share food with anyone who is hungry!",
-            "th": "พรุ่งนี้เป็นวันพิเศษ เรามาแบ่งปันอาหารให้คนที่หิวกันเถอะ"
+            "th": "พรุ่งนี้เป็นวันพระนะ... พวกเรามาแบ่งปันอาหาร ให้คนที่หิวกันเถอะ!"
           }
         },
         {
@@ -151,7 +151,7 @@
           "speaker": "monkey",
           "text": {
             "en": "What a lovely idea! Let's do it!",
-            "th": "ความคิดดีมากเลย ทำกันเถอะ"
+            "th": "ดีเลย ดีเลย! ทำกันเถอะ!"
           }
         }
       ]
@@ -215,7 +215,7 @@
           "speaker": "fufu",
           "text": {
             "en": "The next morning, the Otter caught fish from the river. The Monkey picked sweet mangoes. The Jackal found yellow corn.",
-            "th": "เช้าวันต่อมา นากจับปลาจากแม่น้ำ ลิงเก็บมะม่วงหวานๆ ส่วนหมาจิ้งจอกหาข้าวโพดสีเหลืองมาได้"
+            "th": "เช้าวันต่อมา... นากจับปลามาจากแม่น้ำ ลิงปีนไปเก็บมะม่วงสุกหวานๆ ส่วนหมาจิ้งจอกก็หาข้าวโพดสีเหลืองมาได้"
           }
         },
         {
@@ -223,7 +223,7 @@
           "speaker": "fufu",
           "text": {
             "en": "But the little Rabbit only knew how to eat grass.",
-            "th": "แต่กระต่ายน้อยกินเป็นแต่หญ้า"
+            "th": "แต่กระต่ายน้อยน่ะ... กินเป็นแต่หญ้า"
           }
         },
         {
@@ -231,7 +231,7 @@
           "speaker": "rabbit",
           "text": {
             "en": "Oh no... people can't eat grass. What can I give?",
-            "th": "แย่จัง คนกินหญ้าไม่ได้ แล้วเราจะให้อะไรดีนะ"
+            "th": "แย่จังเลย... คนกินหญ้าไม่ได้นี่นา แล้วเราจะให้อะไรดีนะ"
           }
         }
       ]
@@ -295,7 +295,7 @@
           "speaker": "fufu",
           "text": {
             "en": "Then, an old traveler walked slowly into the forest.",
-            "th": "แล้วก็มีคุณตานักเดินทางคนหนึ่ง ค่อยๆ เดินเข้ามาในป่า"
+            "th": "แล้วก็มีคุณตานักเดินทางคนหนึ่ง... ค่อยๆ เดินเข้ามาในป่า"
           }
         },
         {
@@ -303,7 +303,7 @@
           "speaker": "oldman",
           "text": {
             "en": "I have walked such a long way. Do you have anything to eat?",
-            "th": "ตาเดินทางมาไกลเหลือเกิน มีอะไรให้ตากินบ้างไหมจ๊ะ"
+            "th": "ตาเดินทางมาไกลเหลือเกิน... หิวจังเลยจ้ะ มีอะไรให้ตากินบ้างไหม"
           }
         },
         {
@@ -311,7 +311,7 @@
           "speaker": "fufu",
           "text": {
             "en": "The Otter gave fish, the Monkey gave mangoes, and the Jackal gave corn.",
-            "th": "นากให้ปลา ลิงให้มะม่วง และหมาจิ้งจอกให้ข้าวโพด"
+            "th": "นากรีบยื่นปลาให้ ลิงยื่นมะม่วงให้ และหมาจิ้งจอกก็ยื่นข้าวโพดให้คุณตา"
           }
         }
       ]
@@ -358,7 +358,7 @@
           "speaker": "rabbit",
           "text": {
             "en": "I have no food to give... so I will give everything I have. I will give you myself!",
-            "th": "ฉันไม่มีอาหารจะให้ งั้นฉันขอให้ทุกอย่างที่ฉันมี ฉันให้ตัวฉันเองเลย"
+            "th": "ฉันไม่มีอาหารจะให้เลย... งั้นฉันขอให้ทุกอย่างที่ฉันมี ฉันขอให้ตัวฉันเองค่ะ!"
           }
         },
         {
@@ -366,15 +366,15 @@
           "speaker": "fufu",
           "text": {
             "en": "The brave little Rabbit hopped toward the warm campfire...",
-            "th": "กระต่ายน้อยผู้กล้าหาญ กระโดดไปทางกองไฟอุ่นๆ"
+            "th": "กระต่ายน้อยผู้กล้าหาญ... กระโดดไปทางกองไฟอุ่นๆ"
           }
         },
         {
           "id": "gift-3",
           "speaker": "fufu",
           "text": {
-            "en": "But whoosh! The fire turned into soft, cool flower petals!",
-            "th": "แต่ทันใดนั้น ฟู่! กองไฟกลายเป็นกลีบดอกไม้นุ่มๆ เย็นสบาย"
+            "en": "But then... whoosh! The fire turned into soft, cool flower petals!",
+            "th": "แต่ทันใดนั้น... ฟึ่บ! กองไฟกลายเป็นกลีบดอกไม้ นุ่มนิ่ม เย็นสบาย"
           }
         }
       ]
@@ -411,15 +411,15 @@
           "speaker": "fufu",
           "text": {
             "en": "The old traveler smiled. He was not a traveler at all. He was Phra In, the king of the sky!",
-            "th": "คุณตายิ้ม ที่จริงแล้วคุณตาไม่ใช่นักเดินทางเลย แต่เป็นพระอินทร์ ผู้ยิ่งใหญ่บนฟ้า"
+            "th": "คุณตายิ้มกว้าง... ที่จริงแล้ว คุณตาไม่ใช่นักเดินทางเลย แต่เป็นพระอินทร์ ผู้ยิ่งใหญ่บนสวรรค์!"
           }
         },
         {
           "id": "magic-2",
           "speaker": "oldman",
           "text": {
-            "en": "Little Rabbit, your heart is the kindest of all. Everyone will remember you.",
-            "th": "กระต่ายน้อย เจ้ามีหัวใจที่ดีที่สุด ทุกคนจะจดจำเจ้าตลอดไป"
+            "en": "Little Rabbit... your heart is the kindest of all. Everyone will remember you, forever.",
+            "th": "กระต่ายน้อยเอ๋ย... เจ้ามีหัวใจที่งดงามที่สุด ทุกคนจะจดจำเจ้าไปตลอดกาล"
           }
         }
       ]
@@ -471,15 +471,15 @@
           "speaker": "fufu",
           "text": {
             "en": "Phra In drew a picture of the Rabbit on the bright full moon.",
-            "th": "พระอินทร์จึงวาดรูปกระต่ายไว้บนดวงจันทร์ที่สว่างไสว"
+            "th": "พระอินทร์จึงวาดรูปกระต่ายน้อย ไว้บนดวงจันทร์ที่สว่างไสว"
           }
         },
         {
           "id": "moon-2",
           "speaker": "fufu",
           "text": {
-            "en": "So tonight, when you see the full moon, look closely. The Rabbit is still there, smiling at us!",
-            "th": "คืนนี้ ถ้าเพื่อนๆ เห็นพระจันทร์เต็มดวง ลองมองดีๆ นะ กระต่ายน้อยยังอยู่ตรงนั้น ยิ้มให้พวกเราอยู่"
+            "en": "So tonight, when you see the full moon, look closely... The Rabbit is still there, smiling at us!",
+            "th": "คืนนี้ ถ้าเพื่อนๆ เห็นพระจันทร์เต็มดวง ลองมองดีๆ นะ... กระต่ายน้อยยังอยู่ตรงนั้น ยิ้มให้พวกเราอยู่เลย"
           }
         }
       ]
@@ -503,15 +503,16 @@
           "speaker": "fufu",
           "text": {
             "en": "Today's lesson: kindness doesn't have to be big. Giving with your whole heart is the greatest gift.",
-            "th": "ข้อคิดวันนี้คือ ความดีไม่ต้องยิ่งใหญ่ การให้ด้วยใจทั้งหมดของเรา คือของขวัญที่ดีที่สุด"
-          }
+            "th": "ข้อคิดของวันนี้คือ... ความดีไม่ต้องยิ่งใหญ่ การให้ด้วยหัวใจทั้งหมดของเรา คือของขวัญที่ดีที่สุด"
+          },
+          "noSubtitle": true
         },
         {
           "id": "outro-2",
           "speaker": "fufu",
           "text": {
-            "en": "Thank you for listening! See you next story. Bye-bye!",
-            "th": "ขอบคุณที่ฟังนะ แล้วเจอกันนิทานเรื่องหน้า บ๊ายบาย"
+            "en": "Thank you for listening! See you in the next story... Bye-bye!",
+            "th": "ขอบคุณที่มาฟังนิทานด้วยกันนะ แล้วเจอกันใหม่เรื่องหน้า... บ๊ายบาย!"
           }
         }
       ],

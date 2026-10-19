@@ -18,9 +18,9 @@ import { t } from "../src/lib/text";
 import type { AudioManifest } from "../src/lib/timing";
 import type { CharacterKey } from "../src/lib/types";
 import { getStory, STORIES } from "../src/stories";
+import { googleTts, type GoogleVoice } from "./lib/google-tts";
 
 type Provider = "google" | "elevenlabs";
-type GoogleVoice = { name: string; pitch?: number; rate?: number };
 type ElevenVoice = { voiceId: string; stability?: number; style?: number };
 
 const args = process.argv.slice(2);
@@ -42,24 +42,6 @@ const voiceFor = (lang: LangCode, speaker: CharacterKey) => {
   return table[speaker] ?? table.default;
 };
 
-const googleTts = async (text: string, lang: LangCode, v: GoogleVoice): Promise<Buffer> => {
-  const key = process.env.GOOGLE_TTS_API_KEY;
-  if (!key) throw new Error("GOOGLE_TTS_API_KEY is missing in .env");
-  const languageCode = v.name.split("-").slice(0, 2).join("-");
-  const res = await fetch(`https://texttospeech.googleapis.com/v1/text:synthesize?key=${key}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      input: { text },
-      voice: { languageCode, name: v.name },
-      audioConfig: { audioEncoding: "MP3", pitch: v.pitch ?? 0, speakingRate: v.rate ?? 1, sampleRateHertz: 44100 },
-    }),
-  });
-  if (!res.ok) throw new Error(`Google TTS ${res.status}: ${await res.text()}`);
-  const json = (await res.json()) as { audioContent: string };
-  return Buffer.from(json.audioContent, "base64");
-};
-
 const elevenTts = async (text: string, _lang: LangCode, v: ElevenVoice): Promise<Buffer> => {
   const key = process.env.ELEVENLABS_API_KEY;
   if (!key) throw new Error("ELEVENLABS_API_KEY is missing in .env");
@@ -78,7 +60,7 @@ const elevenTts = async (text: string, _lang: LangCode, v: ElevenVoice): Promise
 };
 
 const synth = (text: string, lang: LangCode, v: GoogleVoice & ElevenVoice) =>
-  provider === "google" ? googleTts(text, lang, v) : elevenTts(text, lang, v);
+  provider === "google" ? googleTts(text, v) : elevenTts(text, lang, v);
 
 const run = async () => {
   for (const storyId of storyIds) {

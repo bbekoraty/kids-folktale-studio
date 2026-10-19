@@ -55,6 +55,8 @@ export interface Line {
   /** Who speaks. "fufu" is the narrator voice. */
   speaker: CharacterKey;
   text: Localized;
+  /** Don't show a subtitle (e.g. the moral, already shown on the card). */
+  noSubtitle?: boolean;
 }
 
 export interface Scene {
@@ -68,6 +70,10 @@ export interface Scene {
   narratorCorner?: boolean;
   cast: CastMember[];
   props?: PropPlacement[];
+  /** How this scene enters: cloud | iris | sparkle | fade (auto when omitted). */
+  transition?: "cloud" | "iris" | "sparkle" | "fade";
+  /** Background music track in public/music (auto from the background when omitted). */
+  music?: string;
   /** Slow camera zoom from 1 to this value over the scene. */
   zoomTo?: number;
   lines: Line[];

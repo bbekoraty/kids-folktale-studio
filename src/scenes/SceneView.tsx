@@ -8,7 +8,7 @@ import { SPEAKER_COLOR, SPEAKER_STAND_IN, UI } from "../config/ui";
 import { t as tr } from "../lib/text";
 import type { Format, LineTiming, Scene, Story } from "../lib/types";
 import { Background } from "./Backgrounds";
-import { fadeInOut, FONT, Subtitle, TitleCard } from "./Overlays";
+import { FONT, Subtitle, TitleCard } from "./Overlays";
 import { Prop } from "./Props";
 import { Talk } from "./Talk";
 
@@ -50,7 +50,7 @@ export const SceneView: React.FC<Props> = ({ story, scene, lang, format, lines, 
   });
 
   const vertical = format === "vertical";
-  const opacity = fadeInOut(frame, duration);
+  const opacity = 1;
 
   const stage = (talk: number) => (
     <g transform={`translate(0 ${STAGE_LIFT}) translate(960 700) scale(${zoom}) translate(-960 -700)`}>
@@ -96,11 +96,11 @@ export const SceneView: React.FC<Props> = ({ story, scene, lang, format, lines, 
       </g>
     ) : null;
 
-  const subtitle = active && activeLine ? (
+  const subtitle = active && activeLine && !activeLine.noSubtitle ? (
     <Subtitle
       text={tr(activeLine.text, lang)}
       local={frame - active.start}
-      duration={(lines[activeIndex + 1]?.start ?? duration) - active.start - 2}
+      duration={lines[activeIndex + 1] ? lines[activeIndex + 1].start - active.start - 2 : Math.min(duration - active.start, active.duration + 18)}
       speakerColor={SPEAKER_COLOR[activeLine.speaker]}
       size={vertical ? 54 : 50}
       maxWidth={vertical ? 900 : 1300}
