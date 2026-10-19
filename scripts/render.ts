@@ -10,7 +10,7 @@
  *   npm run render -- --story rabbit-in-the-moon --lang th --concurrency=2 --log=verbose
  */
 import { execFileSync } from "node:child_process";
-import { mkdirSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync } from "node:fs";
 import { LANG_CODES, type LangCode } from "../src/config/languages";
 import { STORIES } from "../src/stories";
 
@@ -32,6 +32,14 @@ for (const story of storyIds) {
     for (const format of formats) {
       const id = format === "short" ? `${story}-${lang}-short` : `${story}-${lang}`;
       console.log(`\n▶ ${id}`);
+      const manifest = `public/audio/${story}/${lang}/manifest.json`;
+      if (!existsSync(manifest)) {
+        console.warn(`⚠ No voice audio for ${story} · ${lang}. Run: npm run tts -- --story ${story} --lang ${lang}`);
+      } else {
+        const lines = Object.values(JSON.parse(readFileSync(manifest, "utf8")).lines ?? {}) as { file: string }[];
+        const missing = lines.filter((l) => !existsSync(`public/audio/${story}/${lang}/${l.file}`));
+        console.log(`  voice: ${lines.length - missing.length}/${lines.length} audio files found`);
+      }
       execFileSync("npx", ["remotion", "render", id, `out/${id}.mp4`, "--codec=h264", ...browser, ...passthrough], {
         stdio: "inherit",
       });
