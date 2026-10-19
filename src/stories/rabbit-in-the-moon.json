@@ -1,0 +1,521 @@
+{
+  "id": "rabbit-in-the-moon",
+  "title": {
+    "en": "The Rabbit in the Moon",
+    "th": "กระต่ายในดวงจันทร์"
+  },
+  "moral": {
+    "en": "Kindness doesn't have to be big. Giving with your whole heart is the greatest gift.",
+    "th": "ความดีไม่ต้องยิ่งใหญ่ การให้ด้วยใจทั้งหมดของเรา คือของขวัญที่ดีที่สุด"
+  },
+  "shortScenes": [
+    "gift",
+    "magic",
+    "moon"
+  ],
+  "scenes": [
+    {
+      "id": "intro",
+      "background": "stage",
+      "title": {
+        "en": "The Rabbit in the Moon",
+        "th": "กระต่ายในดวงจันทร์"
+      },
+      "cast": [
+        {
+          "character": "fufu",
+          "x": 960,
+          "y": 1000,
+          "scale": 1.55,
+          "action": "wave"
+        }
+      ],
+      "lines": [
+        {
+          "id": "intro-1",
+          "speaker": "fufu",
+          "text": {
+            "en": "Sawasdee, friends! I'm Fufu. Today's story comes from Thailand. It's called The Rabbit in the Moon!",
+            "th": "สวัสดีจ้าเพื่อนๆ ฟูฟูเองนะ วันนี้ฟูฟูมีนิทานจากเมืองไทยมาเล่า ชื่อเรื่องว่า กระต่ายในดวงจันทร์"
+          }
+        },
+        {
+          "id": "intro-2",
+          "speaker": "fufu",
+          "text": {
+            "en": "Have you ever looked at the full moon and seen a little rabbit? Let's find out why!",
+            "th": "เพื่อนๆ เคยมองพระจันทร์เต็มดวง แล้วเห็นกระต่ายตัวเล็กๆ ไหม ไปดูกันว่าทำไม"
+          }
+        }
+      ]
+    },
+    {
+      "id": "friends",
+      "background": "forest-day",
+      "narratorCorner": true,
+      "zoomTo": 1.05,
+      "cast": [
+        {
+          "character": "rabbit",
+          "x": 600,
+          "y": 905,
+          "action": "hop"
+        },
+        {
+          "character": "monkey",
+          "x": 850,
+          "y": 905
+        },
+        {
+          "character": "otter",
+          "x": 1100,
+          "y": 905,
+          "flip": true
+        },
+        {
+          "character": "jackal",
+          "x": 1360,
+          "y": 905,
+          "flip": true
+        }
+      ],
+      "lines": [
+        {
+          "id": "friends-1",
+          "speaker": "fufu",
+          "text": {
+            "en": "Long ago, in a quiet forest by a river, lived four best friends: a Rabbit, a Monkey, an Otter and a Jackal.",
+            "th": "นานมาแล้ว ในป่าเงียบสงบริมแม่น้ำ มีเพื่อนรักสี่ตัว คือ กระต่าย ลิง นาก และหมาจิ้งจอก"
+          }
+        },
+        {
+          "id": "friends-2",
+          "speaker": "fufu",
+          "text": {
+            "en": "Every day they played together, and they always tried to be kind.",
+            "th": "ทุกวันพวกเขาเล่นด้วยกัน และพยายามทำดีต่อกันเสมอ"
+          }
+        }
+      ]
+    },
+    {
+      "id": "plan",
+      "background": "forest-evening",
+      "narratorCorner": true,
+      "zoomTo": 1.06,
+      "cast": [
+        {
+          "character": "rabbit",
+          "x": 700,
+          "y": 905,
+          "action": "hop"
+        },
+        {
+          "character": "monkey",
+          "x": 960,
+          "y": 905,
+          "flip": true
+        },
+        {
+          "character": "otter",
+          "x": 1180,
+          "y": 905,
+          "flip": true
+        },
+        {
+          "character": "jackal",
+          "x": 1400,
+          "y": 905,
+          "flip": true
+        }
+      ],
+      "lines": [
+        {
+          "id": "plan-1",
+          "speaker": "fufu",
+          "text": {
+            "en": "One evening, the moon was big and bright. The Rabbit had an idea.",
+            "th": "เย็นวันหนึ่ง พระจันทร์ดวงโตสว่างไสว กระต่ายนึกอะไรขึ้นมาได้"
+          }
+        },
+        {
+          "id": "plan-2",
+          "speaker": "rabbit",
+          "text": {
+            "en": "Tomorrow is a special day. Let's share food with anyone who is hungry!",
+            "th": "พรุ่งนี้เป็นวันพิเศษ เรามาแบ่งปันอาหารให้คนที่หิวกันเถอะ"
+          }
+        },
+        {
+          "id": "plan-3",
+          "speaker": "monkey",
+          "text": {
+            "en": "What a lovely idea! Let's do it!",
+            "th": "ความคิดดีมากเลย ทำกันเถอะ"
+          }
+        }
+      ]
+    },
+    {
+      "id": "gather",
+      "background": "forest-day",
+      "narratorCorner": true,
+      "cast": [
+        {
+          "character": "otter",
+          "x": 520,
+          "y": 905
+        },
+        {
+          "character": "monkey",
+          "x": 820,
+          "y": 905
+        },
+        {
+          "character": "jackal",
+          "x": 1120,
+          "y": 905
+        },
+        {
+          "character": "rabbit",
+          "x": 1440,
+          "y": 905,
+          "flip": true
+        }
+      ],
+      "props": [
+        {
+          "prop": "fish",
+          "x": 640,
+          "y": 900,
+          "fromLine": "gather-1"
+        },
+        {
+          "prop": "mango",
+          "x": 930,
+          "y": 900,
+          "fromLine": "gather-1"
+        },
+        {
+          "prop": "corn",
+          "x": 1240,
+          "y": 900,
+          "fromLine": "gather-1"
+        },
+        {
+          "prop": "grass",
+          "x": 1560,
+          "y": 905,
+          "fromLine": "gather-2"
+        }
+      ],
+      "lines": [
+        {
+          "id": "gather-1",
+          "speaker": "fufu",
+          "text": {
+            "en": "The next morning, the Otter caught fish from the river. The Monkey picked sweet mangoes. The Jackal found yellow corn.",
+            "th": "เช้าวันต่อมา นากจับปลาจากแม่น้ำ ลิงเก็บมะม่วงหวานๆ ส่วนหมาจิ้งจอกหาข้าวโพดสีเหลืองมาได้"
+          }
+        },
+        {
+          "id": "gather-2",
+          "speaker": "fufu",
+          "text": {
+            "en": "But the little Rabbit only knew how to eat grass.",
+            "th": "แต่กระต่ายน้อยกินเป็นแต่หญ้า"
+          }
+        },
+        {
+          "id": "gather-3",
+          "speaker": "rabbit",
+          "text": {
+            "en": "Oh no... people can't eat grass. What can I give?",
+            "th": "แย่จัง คนกินหญ้าไม่ได้ แล้วเราจะให้อะไรดีนะ"
+          }
+        }
+      ]
+    },
+    {
+      "id": "traveler",
+      "background": "forest-day",
+      "narratorCorner": true,
+      "cast": [
+        {
+          "character": "otter",
+          "x": 470,
+          "y": 905
+        },
+        {
+          "character": "monkey",
+          "x": 700,
+          "y": 905
+        },
+        {
+          "character": "jackal",
+          "x": 930,
+          "y": 905
+        },
+        {
+          "character": "rabbit",
+          "x": 1140,
+          "y": 905
+        },
+        {
+          "character": "oldman",
+          "x": 1500,
+          "y": 920,
+          "flip": true,
+          "action": "walk-in"
+        }
+      ],
+      "props": [
+        {
+          "prop": "fish",
+          "x": 1330,
+          "y": 905,
+          "fromLine": "traveler-3"
+        },
+        {
+          "prop": "mango",
+          "x": 1380,
+          "y": 905,
+          "fromLine": "traveler-3"
+        },
+        {
+          "prop": "corn",
+          "x": 1280,
+          "y": 905,
+          "fromLine": "traveler-3"
+        }
+      ],
+      "lines": [
+        {
+          "id": "traveler-1",
+          "speaker": "fufu",
+          "text": {
+            "en": "Then, an old traveler walked slowly into the forest.",
+            "th": "แล้วก็มีคุณตานักเดินทางคนหนึ่ง ค่อยๆ เดินเข้ามาในป่า"
+          }
+        },
+        {
+          "id": "traveler-2",
+          "speaker": "oldman",
+          "text": {
+            "en": "I have walked such a long way. Do you have anything to eat?",
+            "th": "ตาเดินทางมาไกลเหลือเกิน มีอะไรให้ตากินบ้างไหมจ๊ะ"
+          }
+        },
+        {
+          "id": "traveler-3",
+          "speaker": "fufu",
+          "text": {
+            "en": "The Otter gave fish, the Monkey gave mangoes, and the Jackal gave corn.",
+            "th": "นากให้ปลา ลิงให้มะม่วง และหมาจิ้งจอกให้ข้าวโพด"
+          }
+        }
+      ]
+    },
+    {
+      "id": "gift",
+      "background": "campfire",
+      "narratorCorner": true,
+      "zoomTo": 1.08,
+      "cast": [
+        {
+          "character": "oldman",
+          "x": 1400,
+          "y": 920,
+          "flip": true
+        },
+        {
+          "character": "rabbit",
+          "x": 620,
+          "y": 905,
+          "action": "jump",
+          "actionAt": "gift-3",
+          "toX": 960
+        }
+      ],
+      "props": [
+        {
+          "prop": "fire",
+          "x": 960,
+          "y": 910,
+          "untilLine": "gift-3"
+        },
+        {
+          "prop": "petals",
+          "x": 960,
+          "y": 910,
+          "fromLine": "gift-3",
+          "scale": 1.5
+        }
+      ],
+      "lines": [
+        {
+          "id": "gift-1",
+          "speaker": "rabbit",
+          "text": {
+            "en": "I have no food to give... so I will give everything I have. I will give you myself!",
+            "th": "ฉันไม่มีอาหารจะให้ งั้นฉันขอให้ทุกอย่างที่ฉันมี ฉันให้ตัวฉันเองเลย"
+          }
+        },
+        {
+          "id": "gift-2",
+          "speaker": "fufu",
+          "text": {
+            "en": "The brave little Rabbit hopped toward the warm campfire...",
+            "th": "กระต่ายน้อยผู้กล้าหาญ กระโดดไปทางกองไฟอุ่นๆ"
+          }
+        },
+        {
+          "id": "gift-3",
+          "speaker": "fufu",
+          "text": {
+            "en": "But whoosh! The fire turned into soft, cool flower petals!",
+            "th": "แต่ทันใดนั้น ฟู่! กองไฟกลายเป็นกลีบดอกไม้นุ่มๆ เย็นสบาย"
+          }
+        }
+      ]
+    },
+    {
+      "id": "magic",
+      "background": "campfire",
+      "narratorCorner": true,
+      "cast": [
+        {
+          "character": "phra-in",
+          "x": 1300,
+          "y": 930,
+          "flip": true,
+          "action": "glow"
+        },
+        {
+          "character": "rabbit",
+          "x": 760,
+          "y": 905
+        }
+      ],
+      "props": [
+        {
+          "prop": "petals",
+          "x": 960,
+          "y": 910,
+          "scale": 1.5
+        }
+      ],
+      "lines": [
+        {
+          "id": "magic-1",
+          "speaker": "fufu",
+          "text": {
+            "en": "The old traveler smiled. He was not a traveler at all. He was Phra In, the king of the sky!",
+            "th": "คุณตายิ้ม ที่จริงแล้วคุณตาไม่ใช่นักเดินทางเลย แต่เป็นพระอินทร์ ผู้ยิ่งใหญ่บนฟ้า"
+          }
+        },
+        {
+          "id": "magic-2",
+          "speaker": "oldman",
+          "text": {
+            "en": "Little Rabbit, your heart is the kindest of all. Everyone will remember you.",
+            "th": "กระต่ายน้อย เจ้ามีหัวใจที่ดีที่สุด ทุกคนจะจดจำเจ้าตลอดไป"
+          }
+        }
+      ]
+    },
+    {
+      "id": "moon",
+      "background": "night-moon",
+      "narratorCorner": true,
+      "zoomTo": 1.1,
+      "cast": [
+        {
+          "character": "otter",
+          "x": 560,
+          "y": 920,
+          "scale": 0.85
+        },
+        {
+          "character": "monkey",
+          "x": 760,
+          "y": 920,
+          "scale": 0.85
+        },
+        {
+          "character": "rabbit",
+          "x": 960,
+          "y": 920,
+          "scale": 0.85,
+          "action": "hop"
+        },
+        {
+          "character": "jackal",
+          "x": 1160,
+          "y": 920,
+          "scale": 0.85,
+          "flip": true
+        }
+      ],
+      "props": [
+        {
+          "prop": "moon-rabbit",
+          "x": 1300,
+          "y": 300,
+          "fromLine": "moon-1"
+        }
+      ],
+      "lines": [
+        {
+          "id": "moon-1",
+          "speaker": "fufu",
+          "text": {
+            "en": "Phra In drew a picture of the Rabbit on the bright full moon.",
+            "th": "พระอินทร์จึงวาดรูปกระต่ายไว้บนดวงจันทร์ที่สว่างไสว"
+          }
+        },
+        {
+          "id": "moon-2",
+          "speaker": "fufu",
+          "text": {
+            "en": "So tonight, when you see the full moon, look closely. The Rabbit is still there, smiling at us!",
+            "th": "คืนนี้ ถ้าเพื่อนๆ เห็นพระจันทร์เต็มดวง ลองมองดีๆ นะ กระต่ายน้อยยังอยู่ตรงนั้น ยิ้มให้พวกเราอยู่"
+          }
+        }
+      ]
+    },
+    {
+      "id": "outro",
+      "background": "stage",
+      "cast": [
+        {
+          "character": "fufu",
+          "x": 960,
+          "y": 1000,
+          "scale": 1.55,
+          "action": "wave",
+          "fromLine": "outro-1"
+        }
+      ],
+      "lines": [
+        {
+          "id": "outro-1",
+          "speaker": "fufu",
+          "text": {
+            "en": "Today's lesson: kindness doesn't have to be big. Giving with your whole heart is the greatest gift.",
+            "th": "ข้อคิดวันนี้คือ ความดีไม่ต้องยิ่งใหญ่ การให้ด้วยใจทั้งหมดของเรา คือของขวัญที่ดีที่สุด"
+          }
+        },
+        {
+          "id": "outro-2",
+          "speaker": "fufu",
+          "text": {
+            "en": "Thank you for listening! See you next story. Bye-bye!",
+            "th": "ขอบคุณที่ฟังนะ แล้วเจอกันนิทานเรื่องหน้า บ๊ายบาย"
+          }
+        }
+      ],
+      "showMoral": true
+    }
+  ]
+}

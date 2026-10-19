@@ -1,0 +1,31 @@
+{
+  "_note": "Voice per provider → language → speaker. 'default' is used for any speaker not listed. Google voice names: https://cloud.google.com/text-to-speech/docs/voices — ElevenLabs voice ids come from your ElevenLabs voice library.",
+  "google": {
+    "en": {
+      "default": { "name": "en-US-Neural2-F", "pitch": 2, "rate": 0.95 },
+      "fufu": { "name": "en-US-Neural2-F", "pitch": 3, "rate": 0.95 },
+      "rabbit": { "name": "en-US-Neural2-H", "pitch": 5, "rate": 1.0 },
+      "monkey": { "name": "en-US-Neural2-I", "pitch": 4, "rate": 1.05 },
+      "otter": { "name": "en-US-Neural2-C", "pitch": 3, "rate": 1.0 },
+      "jackal": { "name": "en-US-Neural2-D", "pitch": 2, "rate": 1.0 },
+      "oldman": { "name": "en-US-Neural2-J", "pitch": -4, "rate": 0.88 },
+      "phra-in": { "name": "en-US-Neural2-J", "pitch": -3, "rate": 0.9 }
+    },
+    "th": {
+      "default": { "name": "th-TH-Standard-A", "pitch": 2, "rate": 0.95 },
+      "fufu": { "name": "th-TH-Standard-A", "pitch": 3, "rate": 0.95 },
+      "rabbit": { "name": "th-TH-Standard-A", "pitch": 6, "rate": 1.0 },
+      "monkey": { "name": "th-TH-Standard-A", "pitch": 4, "rate": 1.05 },
+      "oldman": { "name": "th-TH-Standard-A", "pitch": -6, "rate": 0.85 },
+      "phra-in": { "name": "th-TH-Standard-A", "pitch": -5, "rate": 0.88 }
+    }
+  },
+  "elevenlabs": {
+    "en": {
+      "default": { "voiceId": "PUT_VOICE_ID_HERE" }
+    },
+    "th": {
+      "default": { "voiceId": "PUT_VOICE_ID_HERE" }
+    }
+  }
+}

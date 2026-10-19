@@ -1,0 +1,29 @@
+{
+  "name": "kids-folktale-studio",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Fufu Tales — Thai folktales for kids, rendered with Remotion in many languages",
+  "scripts": {
+    "dev": "remotion studio",
+    "tts": "tsx scripts/tts.ts",
+    "render": "tsx scripts/render.ts",
+    "still": "tsx scripts/still.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@fontsource/mali": "^5.2.5",
+    "@remotion/cli": "4.0.537",
+    "@remotion/media-utils": "4.0.537",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "remotion": "4.0.537"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.1.0",
+    "dotenv": "^16.4.7",
+    "music-metadata": "^11.0.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}
