@@ -1,0 +1,47 @@
+# n8n for Fufu Tales.
+#
+#   cd n8n
+#   cp .env.n8n.example .env   (fill in your domain)
+#   docker compose up -d
+#
+# The Studio Worker runs on the host (npm run worker in the project folder);
+# n8n reaches it at http://host.docker.internal:4310.
+
+services:
+  n8n:
+    image: docker.n8n.io/n8nio/n8n:latest # pin a version (e.g. :2.43.8) once everything works
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:5678:5678" # only on this machine; the outside world comes in through Cloudflare Tunnel
+    environment:
+      - N8N_HOST=${N8N_HOST}
+      - N8N_PROTOCOL=https
+      - WEBHOOK_URL=https://${N8N_HOST}/
+      - N8N_EDITOR_BASE_URL=https://${N8N_HOST}/
+      - N8N_PROXY_HOPS=1
+      - GENERIC_TIMEZONE=Asia/Bangkok
+      - TZ=Asia/Bangkok
+      # rendered videos are 50–100 MB: keep binary data on disk, not in memory
+      - N8N_DEFAULT_BINARY_DATA_MODE=filesystem
+      - N8N_RUNNERS_ENABLED=true
+      - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
+    extra_hosts:
+      - "host.docker.internal:host-gateway" # needed on Linux; Docker Desktop on Mac has it already
+    volumes:
+      - n8n_data:/home/node/.n8n
+
+  # Optional: run the Cloudflare Tunnel in Docker too.
+  # Create the tunnel in Zero Trust → Networks → Tunnels, copy its token into .env,
+  # and set the public hostname's service to http://n8n:5678
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run
+    environment:
+      - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}
+    depends_on:
+      - n8n
+    profiles: ["tunnel"] # start with: docker compose --profile tunnel up -d
+
+volumes:
+  n8n_data:

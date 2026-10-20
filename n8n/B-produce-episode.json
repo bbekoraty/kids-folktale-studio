@@ -1,0 +1,1452 @@
+{
+  "name": "Fufu B · ผลิตตอนและอัปโหลด",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "ผลิตตอน · Fufu Tales",
+        "formDescription": "สร้างเสียง → ภาพตรวจ → เรนเดอร์ → อัปโหลด YouTube (Private) มีจุดอนุมัติใน Telegram",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Story id",
+              "placeholder": "rabbit-in-the-moon",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "ภาษา",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "th"
+                  },
+                  {
+                    "option": "en"
+                  }
+                ]
+              },
+              "multiselect": true,
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "ทำ Shorts ด้วย",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "ใช่"
+                  },
+                  {
+                    "option": "ไม่"
+                  }
+                ]
+              },
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "0c8bbf16-d233-5e60-b3bf-d0125d1ab8f5",
+      "name": "Form: ผลิตตอน",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        400
+      ],
+      "webhookId": "8ff337d5-371e-5bb8-9aed-0c554ca6748d"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "dc7f3382-09f8-5319-ad8c-7b7d178c29c5",
+              "name": "workerBase",
+              "value": "http://host.docker.internal:4310",
+              "type": "string"
+            },
+            {
+              "id": "b9c55a74-4587-5d9a-bfc2-9eddcaa13922",
+              "name": "telegramChatId",
+              "value": "PUT_YOUR_TELEGRAM_CHAT_ID",
+              "type": "string"
+            },
+            {
+              "id": "7a9b831d-ad3c-5f44-bba6-a6825aafc9c0",
+              "name": "sheetId",
+              "value": "PUT_GOOGLE_SHEET_ID",
+              "type": "string"
+            },
+            {
+              "id": "12625f20-6e9e-5c56-885a-c4b305a737ab",
+              "name": "sheetName",
+              "value": "uploads",
+              "type": "string"
+            },
+            {
+              "id": "35fcba9b-7d27-5f25-9cb9-e4d264856e41",
+              "name": "regionCode",
+              "value": "TH",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "57e20755-7e2e-5755-ae09-133bd54bf31a",
+      "name": "Settings",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        200,
+        400
+      ],
+      "notes": "Edit these values after importing"
+    },
+    {
+      "parameters": {
+        "jsCode": "const form = $('Form: ผลิตตอน').first().json;\nconst langs = [].concat(form['ภาษา'] || []).filter(Boolean);\nreturn [{ json: {\n  story: String(form['Story id']).trim(),\n  langs: langs.length ? langs : ['th', 'en'],\n  formats: form['ทำ Shorts ด้วย'] === 'ไม่' ? ['long'] : ['long', 'short'],\n} }];"
+      },
+      "id": "590b1f52-2399-5772-86f5-a5b243638074",
+      "name": "เตรียมค่า",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        400,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Settings').first().json.workerBase }}/jobs",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {},
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ type: 'tts', story: $('เตรียมค่า').first().json.story, langs: $('เตรียมค่า').first().json.langs, callbackUrl: $execution.resumeUrl }) }}"
+      },
+      "id": "fdba0794-7a67-53b1-8b67-3e69727b86a8",
+      "name": "Worker: สร้างเสียง",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        600,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "resume": "webhook",
+        "httpMethod": "POST",
+        "options": {}
+      },
+      "id": "51592441-a075-55c4-8f21-549d91412ee9",
+      "name": "รอเสียงเสร็จ",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        800,
+        400
+      ],
+      "webhookId": "d72c7e4a-256a-55e6-8453-8426e24e4b7f"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "1af5be32-046f-5e93-8d26-d27e97573436",
+              "leftValue": "={{ $('รอเสียงเสร็จ').first().json.body.status }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              },
+              "rightValue": "done"
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "9b74a5e4-eb15-5ba6-8c72-ade58c4620ce",
+      "name": "เสียงสำเร็จ?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1000,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Settings').first().json.telegramChatId }}",
+        "text": "=❌ งาน {{ $('รอเสียงเสร็จ').first().json.body.type }} ไม่สำเร็จ\n{{ $('รอเสียงเสร็จ').first().json.body.error }}\n\nlog:\n{{ ($('รอเสียงเสร็จ').first().json.body.log || []).slice(-6).join('\\n') }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "fc86ffe7-ab2f-5038-ae8f-543345d6f74f",
+      "name": "แจ้ง: เสียงพัง",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1200,
+        560
+      ],
+      "webhookId": "88da43d0-2ddf-5e90-931c-d47484011aa0"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Settings').first().json.workerBase }}/jobs",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {},
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ type: 'stills', story: $('เตรียมค่า').first().json.story, lang: $('เตรียมค่า').first().json.langs[0], callbackUrl: $execution.resumeUrl }) }}"
+      },
+      "id": "59bf1b72-9ba5-5740-ba67-c20ea2782d17",
+      "name": "Worker: ภาพนิ่งทุกฉาก",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1200,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "resume": "webhook",
+        "httpMethod": "POST",
+        "options": {}
+      },
+      "id": "3a74bc6c-7736-594a-917e-6d70fd7c0b36",
+      "name": "รอภาพนิ่ง",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1400,
+        400
+      ],
+      "webhookId": "294e9fff-de8b-54ed-a2de-fc65ca6095b9"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "44752aa5-40d6-58f2-a3d8-07ac30c6bca9",
+              "leftValue": "={{ $('รอภาพนิ่ง').first().json.body.status }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              },
+              "rightValue": "done"
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "adc0d8ef-faa8-5a12-9c93-f004d8dca6ba",
+      "name": "ภาพนิ่งสำเร็จ?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1600,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Settings').first().json.telegramChatId }}",
+        "text": "=❌ งาน {{ $('รอภาพนิ่ง').first().json.body.type }} ไม่สำเร็จ\n{{ $('รอภาพนิ่ง').first().json.body.error }}\n\nlog:\n{{ ($('รอภาพนิ่ง').first().json.body.log || []).slice(-6).join('\\n') }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "051a7be5-675f-5e8f-adea-6574ca73ea71",
+      "name": "แจ้ง: ภาพนิ่งพัง",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1800,
+        560
+      ],
+      "webhookId": "3adb17f4-f94d-5249-9f76-81ce70537cfe"
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('รอภาพนิ่ง').first().json.body.outputs.map((o) => ({ json: o, pairedItem: 0 }));"
+      },
+      "id": "94b21af8-8478-5253-acb2-8c6874f131f9",
+      "name": "รายการภาพนิ่ง",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1800,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "data"
+            }
+          }
+        }
+      },
+      "id": "5e053138-7bb9-54c3-b919-06da7b0f3eb7",
+      "name": "โหลดภาพนิ่ง",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2000,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "sendPhoto",
+        "chatId": "={{ $('Settings').first().json.telegramChatId }}",
+        "binaryData": true,
+        "binaryPropertyName": "data",
+        "additionalFields": {
+          "caption": "={{ $json.scene }}"
+        }
+      },
+      "id": "e1bcc826-2169-5bc0-bb24-3580765397d3",
+      "name": "ส่งภาพนิ่ง",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2200,
+        400
+      ],
+      "webhookId": "bc4d2c9b-b919-50c1-97d0-25b3987e5f02"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: { count: $input.all().length }, pairedItem: 0 }];"
+      },
+      "id": "1d000ab2-1872-5ce1-a49a-49d8ca302fab",
+      "name": "รวมเป็นรายการเดียว 1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2400,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "chatId": "={{ $('Settings').first().json.telegramChatId }}",
+        "message": "=🖼 ภาพ {{ $json.count }} ฉากของ {{ $('เตรียมค่า').first().json.story }} ด้านบน\nโอเคแล้วเรนเดอร์คลิปเต็มเลยไหม?",
+        "approvalOptions": {
+          "values": {
+            "approvalType": "double",
+            "approveLabel": "เรนเดอร์เลย",
+            "disapproveLabel": "ยังก่อน"
+          }
+        },
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "95c781ee-0b96-53d3-976c-d2e264d12b53",
+      "name": "ถาม: ภาพโอเคไหม?",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2600,
+        400
+      ],
+      "webhookId": "449fb0fe-4a16-5035-b854-0730944906a0"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "77c5894c-7ca5-5e9b-992d-bea10ea3a4b6",
+              "leftValue": "={{ $json.data.approved }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "c7475f26-108b-57f1-9de3-7a1b78c520c0",
+      "name": "เรนเดอร์?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2800,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Settings').first().json.telegramChatId }}",
+        "text": "=⏸ หยุดไว้ก่อน แก้บทหรือฉากของ {{ $('เตรียมค่า').first().json.story }} แล้วสั่ง workflow B ใหม่",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "8623db93-4d5f-5b3b-b8fb-e81bdf0f9521",
+      "name": "แจ้ง: หยุดที่ภาพนิ่ง",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        3000,
+        560
+      ],
+      "webhookId": "6f145fce-e90c-5e2e-a562-615cf6474141"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Settings').first().json.workerBase }}/jobs",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {},
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ type: 'render', story: $('เตรียมค่า').first().json.story, langs: $('เตรียมค่า').first().json.langs, formats: $('เตรียมค่า').first().json.formats, callbackUrl: $execution.resumeUrl }) }}"
+      },
+      "id": "67d04018-45ed-57e5-99ef-61bab6108d66",
+      "name": "Worker: เรนเดอร์",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3000,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "resume": "webhook",
+        "httpMethod": "POST",
+        "options": {}
+      },
+      "id": "37eb60a9-d281-55dd-898f-0ac162d57d6d",
+      "name": "รอเรนเดอร์",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        3200,
+        400
+      ],
+      "webhookId": "57518e0e-b040-5010-9826-67eddadcd75f"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "7a5f864c-5a3c-5dfa-9d91-6c36b414e156",
+              "leftValue": "={{ $('รอเรนเดอร์').first().json.body.status }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              },
+              "rightValue": "done"
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "b42493f6-17bf-547c-ae0a-9f207a795875",
+      "name": "เรนเดอร์สำเร็จ?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        3400,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Settings').first().json.telegramChatId }}",
+        "text": "=❌ งาน {{ $('รอเรนเดอร์').first().json.body.type }} ไม่สำเร็จ\n{{ $('รอเรนเดอร์').first().json.body.error }}\n\nlog:\n{{ ($('รอเรนเดอร์').first().json.body.log || []).slice(-6).join('\\n') }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "9ab19568-0ec8-5d9c-8151-75df6e1be749",
+      "name": "แจ้ง: เรนเดอร์พัง",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        3600,
+        560
+      ],
+      "webhookId": "c0c71388-bd27-52cf-a8d6-0ad1640e0efd"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Telegram bots can send files up to 50 MB: send thumbnails and Shorts, not the long videos\nreturn $('รอเรนเดอร์').first().json.body.outputs\n  .filter((o) => o.kind === 'image' || (o.format === 'vertical' && (o.bytes || 0) < 48e6))\n  .map((o) => ({ json: o, pairedItem: 0 }));"
+      },
+      "id": "b7be2461-0b85-509d-b17b-3e0b0a3bd160",
+      "name": "รายการพรีวิว",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3600,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "data"
+            }
+          }
+        }
+      },
+      "id": "945371e3-1f36-5fbe-b622-3ad609c73b9e",
+      "name": "โหลดพรีวิว",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3800,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "33820131-da8d-509f-9fee-f16262e1ebfe",
+              "leftValue": "={{ $json.kind }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              },
+              "rightValue": "video"
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "a770bee9-fc50-574a-be00-30d616e4fcf0",
+      "name": "เป็นวิดีโอ?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        4000,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "sendVideo",
+        "chatId": "={{ $('Settings').first().json.telegramChatId }}",
+        "binaryData": true,
+        "binaryPropertyName": "data",
+        "additionalFields": {
+          "caption": "={{ $json.youtube.title }}"
+        }
+      },
+      "id": "7256b094-ea28-5dec-bdee-5f3ac24ca3d7",
+      "name": "ส่ง Shorts",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        4200,
+        320
+      ],
+      "webhookId": "fed84972-ec1f-5726-b853-16d7a008c17f"
+    },
+    {
+      "parameters": {
+        "operation": "sendPhoto",
+        "chatId": "={{ $('Settings').first().json.telegramChatId }}",
+        "binaryData": true,
+        "binaryPropertyName": "data",
+        "additionalFields": {
+          "caption": "=Thumbnail {{ $json.lang }}"
+        }
+      },
+      "id": "0b0ad8f1-065d-5073-8e44-83fbfdd1f6ab",
+      "name": "ส่ง Thumbnail",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        4200,
+        480
+      ],
+      "webhookId": "66facc1e-eb57-573e-99c8-0bee0663e0bd"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: { count: $input.all().length }, pairedItem: 0 }];"
+      },
+      "id": "30c1238a-a959-5022-a287-34cf4d692930",
+      "name": "รวมเป็นรายการเดียว 2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4400,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "chatId": "={{ $('Settings').first().json.telegramChatId }}",
+        "message": "=🎬 เรนเดอร์ {{ $('เตรียมค่า').first().json.story }} เสร็จแล้ว ({{ $('รอเรนเดอร์').first().json.body.outputs.filter(o => o.kind === 'video').length }} คลิป)\nอัปโหลดขึ้น YouTube แบบ Private + Made for Kids เลยไหม?\n(คลิปยาวดูได้ใน YouTube Studio หลังอัปโหลด)",
+        "approvalOptions": {
+          "values": {
+            "approvalType": "double",
+            "approveLabel": "อัปโหลด",
+            "disapproveLabel": "ยังก่อน"
+          }
+        },
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "893b09bf-99b5-5397-9169-f37c88ea5870",
+      "name": "ถาม: อัปโหลดไหม?",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        4600,
+        400
+      ],
+      "webhookId": "4a92bc86-45f7-5269-ac5c-bfd20e7c4dd8"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "1008ba7e-4143-5b5f-b692-1e721654c13e",
+              "leftValue": "={{ $json.data.approved }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "f641acf1-723f-5a2b-8691-bd14d596fee1",
+      "name": "อัปโหลด?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        4800,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Settings').first().json.telegramChatId }}",
+        "text": "=⏸ ไม่อัปโหลด ไฟล์อยู่ในโฟลเดอร์ out/ ของโปรเจกต์",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "ecb784ec-a52f-5940-b9f8-efbbebd2007e",
+      "name": "แจ้ง: ไม่อัปโหลด",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        5000,
+        560
+      ],
+      "webhookId": "285cda65-32a3-5565-81b5-180ec5df9c87"
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('รอเรนเดอร์').first().json.body.outputs\n  .filter((o) => o.kind === 'video')\n  .map((o) => ({ json: o, pairedItem: 0 }));"
+      },
+      "id": "950cf5e7-f366-54f6-951f-489c772d2ace",
+      "name": "รายการอัปโหลด",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        5000,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "data"
+            }
+          }
+        }
+      },
+      "id": "963c6479-567c-54cc-87bd-073496f126ef",
+      "name": "โหลดวิดีโอ",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        5200,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "video",
+        "operation": "upload",
+        "title": "={{ $json.youtube.title }}",
+        "regionCode": "={{ $('Settings').first().json.regionCode }}",
+        "categoryId": "={{ $json.youtube.categoryId }}",
+        "binaryProperty": "data",
+        "options": {
+          "defaultLanguage": "={{ $json.youtube.defaultLanguage }}",
+          "description": "={{ $json.youtube.description }}",
+          "embeddable": true,
+          "notifySubscribers": false,
+          "privacyStatus": "private",
+          "selfDeclaredMadeForKids": true,
+          "tags": "={{ $json.youtube.tags.join(',') }}"
+        }
+      },
+      "id": "dea467f9-3fbd-546e-ae8a-d80123de7d3d",
+      "name": "YouTube: อัปโหลด",
+      "type": "n8n-nodes-base.youTube",
+      "typeVersion": 1,
+      "position": [
+        5400,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "2df09c5e-95a6-5e69-9e42-8b92b8ac613c",
+              "leftValue": "={{ $('รายการอัปโหลด').item.json.thumbnailUrl }}",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "d921bf5f-324c-54d3-a0e6-a41dbb06e3ea",
+      "name": "มี Thumbnail?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        5600,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ $('รายการอัปโหลด').item.json.thumbnailUrl }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "thumb"
+            }
+          }
+        }
+      },
+      "id": "ec6432a2-cb85-5edd-ab57-0b62ef849357",
+      "name": "โหลด Thumbnail",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        5800,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.googleapis.com/upload/youtube/v3/thumbnails/set",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "youTubeOAuth2Api",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "videoId",
+              "value": "={{ $('YouTube: อัปโหลด').item.json.uploadId }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "thumb",
+        "options": {}
+      },
+      "id": "0c50dd06-8348-517c-8e41-9f69ce60c28e",
+      "name": "YouTube: ตั้ง Thumbnail",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        6000,
+        320
+      ],
+      "onError": "continueRegularOutput",
+      "notes": "Fails until the channel is phone-verified; the upload still counts."
+    },
+    {
+      "parameters": {
+        "mode": "manual",
+        "assignments": {
+          "assignments": [
+            {
+              "id": "face9157-5e21-5617-9290-36ae0d2114eb",
+              "name": "date",
+              "value": "={{ $now.setZone('Asia/Bangkok').toFormat('yyyy-MM-dd HH:mm') }}",
+              "type": "string"
+            },
+            {
+              "id": "c0a4bb88-c233-5520-a17f-3674d673c477",
+              "name": "story",
+              "value": "={{ $('รายการอัปโหลด').item.json.storyId }}",
+              "type": "string"
+            },
+            {
+              "id": "69234774-59ff-5bb2-bafb-50e90fa5b28d",
+              "name": "lang",
+              "value": "={{ $('รายการอัปโหลด').item.json.lang }}",
+              "type": "string"
+            },
+            {
+              "id": "fdfe8321-7f35-5420-9f6b-a05fdd06951c",
+              "name": "format",
+              "value": "={{ $('รายการอัปโหลด').item.json.format === 'vertical' ? 'short' : 'long' }}",
+              "type": "string"
+            },
+            {
+              "id": "c09c8340-eea4-5bc3-a6f9-f65fb7bc581a",
+              "name": "title",
+              "value": "={{ $('รายการอัปโหลด').item.json.youtube.title }}",
+              "type": "string"
+            },
+            {
+              "id": "1426837c-1d84-59f2-bc9d-04e6705ecd61",
+              "name": "youtube",
+              "value": "=https://youtu.be/{{ $('YouTube: อัปโหลด').item.json.uploadId }}",
+              "type": "string"
+            },
+            {
+              "id": "ca850cf0-c34d-5545-a363-b314076f1619",
+              "name": "status",
+              "value": "private",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "8bb7d7c0-b0dd-5a8b-970a-5dc0560c35a6",
+      "name": "แถวบันทึก",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        6200,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Settings').first().json.sheetId }}"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "={{ $('Settings').first().json.sheetName }}"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "cd4a3dcb-2ea7-55f3-9b7d-1745d231e8d7",
+      "name": "Google Sheets: บันทึก",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        6400,
+        400
+      ],
+      "onError": "continueRegularOutput",
+      "notes": "Sheet needs a header row: date, story, lang, format, title, youtube, status"
+    },
+    {
+      "parameters": {
+        "jsCode": "const rows = $('แถวบันทึก').all().map((i) => `• ${i.json.lang} ${i.json.format}: ${i.json.youtube}`);\nreturn [{ json: { text: rows.join('\\n') }, pairedItem: 0 }];"
+      },
+      "id": "f0c3e18e-5831-5438-9703-43d628aded77",
+      "name": "สรุปลิงก์",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        6600,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Settings').first().json.telegramChatId }}",
+        "text": "=✅ อัปโหลด {{ $('เตรียมค่า').first().json.story }} แล้ว (Private)\n{{ $json.text }}\n\nเข้า YouTube Studio ดูคลิปยาว แล้วกด Public หรือตั้งเวลาเผยแพร่",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "0561d507-63bf-5901-a674-2df7eadd82d7",
+      "name": "แจ้ง: อัปโหลดเสร็จ",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        6800,
+        400
+      ],
+      "webhookId": "7f354cdd-f42a-5845-94de-81f47c13a42e"
+    }
+  ],
+  "connections": {
+    "Form: ผลิตตอน": {
+      "main": [
+        [
+          {
+            "node": "Settings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Settings": {
+      "main": [
+        [
+          {
+            "node": "เตรียมค่า",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "เตรียมค่า": {
+      "main": [
+        [
+          {
+            "node": "Worker: สร้างเสียง",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Worker: สร้างเสียง": {
+      "main": [
+        [
+          {
+            "node": "รอเสียงเสร็จ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "รอเสียงเสร็จ": {
+      "main": [
+        [
+          {
+            "node": "เสียงสำเร็จ?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "เสียงสำเร็จ?": {
+      "main": [
+        [
+          {
+            "node": "Worker: ภาพนิ่งทุกฉาก",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "แจ้ง: เสียงพัง",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Worker: ภาพนิ่งทุกฉาก": {
+      "main": [
+        [
+          {
+            "node": "รอภาพนิ่ง",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "รอภาพนิ่ง": {
+      "main": [
+        [
+          {
+            "node": "ภาพนิ่งสำเร็จ?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ภาพนิ่งสำเร็จ?": {
+      "main": [
+        [
+          {
+            "node": "รายการภาพนิ่ง",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "แจ้ง: ภาพนิ่งพัง",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "รายการภาพนิ่ง": {
+      "main": [
+        [
+          {
+            "node": "โหลดภาพนิ่ง",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "โหลดภาพนิ่ง": {
+      "main": [
+        [
+          {
+            "node": "ส่งภาพนิ่ง",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ส่งภาพนิ่ง": {
+      "main": [
+        [
+          {
+            "node": "รวมเป็นรายการเดียว 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "รวมเป็นรายการเดียว 1": {
+      "main": [
+        [
+          {
+            "node": "ถาม: ภาพโอเคไหม?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ถาม: ภาพโอเคไหม?": {
+      "main": [
+        [
+          {
+            "node": "เรนเดอร์?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "เรนเดอร์?": {
+      "main": [
+        [
+          {
+            "node": "Worker: เรนเดอร์",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "แจ้ง: หยุดที่ภาพนิ่ง",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Worker: เรนเดอร์": {
+      "main": [
+        [
+          {
+            "node": "รอเรนเดอร์",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "รอเรนเดอร์": {
+      "main": [
+        [
+          {
+            "node": "เรนเดอร์สำเร็จ?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "เรนเดอร์สำเร็จ?": {
+      "main": [
+        [
+          {
+            "node": "รายการพรีวิว",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "แจ้ง: เรนเดอร์พัง",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "รายการพรีวิว": {
+      "main": [
+        [
+          {
+            "node": "โหลดพรีวิว",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "โหลดพรีวิว": {
+      "main": [
+        [
+          {
+            "node": "เป็นวิดีโอ?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "เป็นวิดีโอ?": {
+      "main": [
+        [
+          {
+            "node": "ส่ง Shorts",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "ส่ง Thumbnail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ส่ง Shorts": {
+      "main": [
+        [
+          {
+            "node": "รวมเป็นรายการเดียว 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ส่ง Thumbnail": {
+      "main": [
+        [
+          {
+            "node": "รวมเป็นรายการเดียว 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "รวมเป็นรายการเดียว 2": {
+      "main": [
+        [
+          {
+            "node": "ถาม: อัปโหลดไหม?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ถาม: อัปโหลดไหม?": {
+      "main": [
+        [
+          {
+            "node": "อัปโหลด?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "อัปโหลด?": {
+      "main": [
+        [
+          {
+            "node": "รายการอัปโหลด",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "แจ้ง: ไม่อัปโหลด",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "รายการอัปโหลด": {
+      "main": [
+        [
+          {
+            "node": "โหลดวิดีโอ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "โหลดวิดีโอ": {
+      "main": [
+        [
+          {
+            "node": "YouTube: อัปโหลด",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "YouTube: อัปโหลด": {
+      "main": [
+        [
+          {
+            "node": "มี Thumbnail?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "มี Thumbnail?": {
+      "main": [
+        [
+          {
+            "node": "โหลด Thumbnail",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "แถวบันทึก",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "โหลด Thumbnail": {
+      "main": [
+        [
+          {
+            "node": "YouTube: ตั้ง Thumbnail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "YouTube: ตั้ง Thumbnail": {
+      "main": [
+        [
+          {
+            "node": "แถวบันทึก",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "แถวบันทึก": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets: บันทึก",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets: บันทึก": {
+      "main": [
+        [
+          {
+            "node": "สรุปลิงก์",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "สรุปลิงก์": {
+      "main": [
+        [
+          {
+            "node": "แจ้ง: อัปโหลดเสร็จ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Bangkok"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": false
+  }
+}

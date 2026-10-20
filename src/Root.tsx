@@ -5,6 +5,7 @@ import type { StoryProps } from "./lib/types";
 import { calculateStoryMetadata, StoryVideo } from "./StoryVideo";
 import { STORIES } from "./stories";
 import { CharacterSheet } from "./CharacterSheet";
+import { Thumbnail } from "./Thumbnail";
 
 /**
  * One composition per story × language × format.
@@ -26,6 +27,15 @@ export const Root: React.FC = () => (
               durationInFrames={FPS * 10}
               defaultProps={{ storyId: story.id, lang, format: "landscape" }}
               calculateMetadata={calculateStoryMetadata}
+            />
+            <Composition
+              id={`${story.id}-${lang}-thumb`}
+              component={Thumbnail}
+              width={1280}
+              height={720}
+              fps={FPS}
+              durationInFrames={1}
+              defaultProps={{ storyId: story.id, lang }}
             />
             <Composition
               id={`${story.id}-${lang}-short`}

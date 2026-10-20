@@ -1,0 +1,390 @@
+{
+  "name": "Fufu A · ร่างบทนิทานใหม่",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "ร่างบทนิทานใหม่ · Fufu Tales",
+        "formDescription": "Claude จะร่างบท EN/TH ให้ แล้วส่งให้ตรวจใน Telegram",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "ชื่อนิทาน",
+              "placeholder": "เช่น แม่โพสพ",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "เรื่องย่อ",
+              "fieldType": "textarea",
+              "placeholder": "เล่าเนื้อเรื่องคร่าวๆ ภาษาอะไรก็ได้"
+            },
+            {
+              "fieldLabel": "ข้อคิดที่ต้องการ",
+              "placeholder": "เช่น ให้รู้คุณค่าของข้าว"
+            },
+            {
+              "fieldLabel": "หมายเหตุ",
+              "fieldType": "textarea",
+              "placeholder": "ฉากที่อยากตัด โทนเรื่อง ฯลฯ"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "bc118c8c-f133-59be-90b0-8046964960a6",
+      "name": "Form: นิทานเรื่องใหม่",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        300
+      ],
+      "webhookId": "2de286cd-256d-564f-889c-fdc7979e7265"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "00ddd7c9-2b0b-5162-b72f-4bdbc9fe901d",
+              "name": "workerBase",
+              "value": "http://host.docker.internal:4310",
+              "type": "string"
+            },
+            {
+              "id": "c3aeef9e-2595-5d98-8319-f725df6220fa",
+              "name": "telegramChatId",
+              "value": "PUT_YOUR_TELEGRAM_CHAT_ID",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "6b88de0d-3c52-53b1-8de9-e8cb07c91a7f",
+      "name": "Settings",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        300
+      ],
+      "notes": "Edit these values after importing"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Settings').first().json.workerBase }}/stories/draft",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {},
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ title: $('Form: นิทานเรื่องใหม่').first().json['ชื่อนิทาน'], synopsis: $('Form: นิทานเรื่องใหม่').first().json['เรื่องย่อ'], moral: $('Form: นิทานเรื่องใหม่').first().json['ข้อคิดที่ต้องการ'], notes: $('Form: นิทานเรื่องใหม่').first().json['หมายเหตุ'], callbackUrl: $execution.resumeUrl }) }}"
+      },
+      "id": "1552f8fd-f7be-5cff-893f-039afa76ccd6",
+      "name": "Worker: เริ่มร่างบท",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        440,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "resume": "webhook",
+        "httpMethod": "POST",
+        "options": {}
+      },
+      "id": "b2195d99-7b8d-5e94-8643-d07efb5a7dba",
+      "name": "รอบทเสร็จ",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        300
+      ],
+      "webhookId": "a502ebb6-398d-5db0-a7b7-7fdcf506f12e"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "eec7b374-9afb-562a-9c95-de93f0e417c1",
+              "leftValue": "={{ $('รอบทเสร็จ').first().json.body.status }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              },
+              "rightValue": "done"
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "91fba7ab-77a5-56e9-b7a1-34980f19b1f0",
+      "name": "ร่างสำเร็จ?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        880,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Settings').first().json.telegramChatId }}",
+        "text": "=❌ งาน {{ $('รอบทเสร็จ').first().json.body.type }} ไม่สำเร็จ\n{{ $('รอบทเสร็จ').first().json.body.error }}\n\nlog:\n{{ ($('รอบทเสร็จ').first().json.body.log || []).slice(-6).join('\\n') }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "d03903a3-86b4-512e-9d01-77635de1aa04",
+      "name": "แจ้ง: ร่างไม่สำเร็จ",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1100,
+        480
+      ],
+      "webhookId": "e84d60fa-60e6-5396-b9e7-07ec8f38ef86"
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "chatId": "={{ $('Settings').first().json.telegramChatId }}",
+        "message": "={{ $('รอบทเสร็จ').first().json.body.result.preview }}\n\n{{ ($('รอบทเสร็จ').first().json.body.result.warnings || []).length ? '⚠️ ' + $('รอบทเสร็จ').first().json.body.result.warnings.length + ' ข้อควรดู (ภาษาไม่ครบ/ประโยคยาว)' : '' }}",
+        "approvalOptions": {
+          "values": {
+            "approvalType": "double",
+            "approveLabel": "อนุมัติ",
+            "disapproveLabel": "ไม่อนุมัติ"
+          }
+        },
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "2a8db773-0745-59fc-8049-885509777dea",
+      "name": "ถาม: อนุมัติบท?",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1100,
+        220
+      ],
+      "webhookId": "1e079e24-436c-566a-a757-89f7c26fb2dd"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "657cf0da-34e9-543e-ae9a-ae98e9fb376c",
+              "leftValue": "={{ $json.data.approved }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "71908600-6dab-5159-813a-22130f610b80",
+      "name": "อนุมัติ?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1320,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Settings').first().json.workerBase }}/stories/{{ $('รอบทเสร็จ').first().json.body.result.storyId }}/status",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {},
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\"status\": \"approved\"}"
+      },
+      "id": "8c50ad70-7914-5832-88ad-7da34074693c",
+      "name": "Worker: ตั้งสถานะ approved",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1540,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Settings').first().json.telegramChatId }}",
+        "text": "=✅ อนุมัติบท {{ $('รอบทเสร็จ').first().json.body.result.storyId }} แล้ว\n{{ ($('รอบทเสร็จ').first().json.body.result.assetRequests || []).length ? '🎨 ต้องวาดเพิ่มก่อนผลิต:\\n• ' + $('รอบทเสร็จ').first().json.body.result.assetRequests.join('\\n• ') : 'ใช้ workflow B ผลิตตอนได้เลย' }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "52abb709-7d4e-5e00-bdf5-159825db6d75",
+      "name": "แจ้ง: พร้อมผลิต",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1760,
+        140
+      ],
+      "webhookId": "4f12a69d-358f-5d3a-aecc-e7aab10f7a06"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Settings').first().json.telegramChatId }}",
+        "text": "=📝 เก็บบทไว้เป็น draft ที่ src/stories/{{ $('รอบทเสร็จ').first().json.body.result.storyId }}.json\nแก้ใน VS Code หรือสั่งร่างใหม่ได้",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "30efafa5-44fd-5e0c-8c4b-71f41aa3b156",
+      "name": "แจ้ง: เก็บเป็น draft",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1540,
+        320
+      ],
+      "webhookId": "2785b4ec-01c0-5765-8766-34d034fba79e"
+    }
+  ],
+  "connections": {
+    "Form: นิทานเรื่องใหม่": {
+      "main": [
+        [
+          {
+            "node": "Settings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Settings": {
+      "main": [
+        [
+          {
+            "node": "Worker: เริ่มร่างบท",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Worker: เริ่มร่างบท": {
+      "main": [
+        [
+          {
+            "node": "รอบทเสร็จ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "รอบทเสร็จ": {
+      "main": [
+        [
+          {
+            "node": "ร่างสำเร็จ?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ร่างสำเร็จ?": {
+      "main": [
+        [
+          {
+            "node": "ถาม: อนุมัติบท?",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "แจ้ง: ร่างไม่สำเร็จ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ถาม: อนุมัติบท?": {
+      "main": [
+        [
+          {
+            "node": "อนุมัติ?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "อนุมัติ?": {
+      "main": [
+        [
+          {
+            "node": "Worker: ตั้งสถานะ approved",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "แจ้ง: เก็บเป็น draft",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Worker: ตั้งสถานะ approved": {
+      "main": [
+        [
+          {
+            "node": "แจ้ง: พร้อมผลิต",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Bangkok"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": false
+  }
+}

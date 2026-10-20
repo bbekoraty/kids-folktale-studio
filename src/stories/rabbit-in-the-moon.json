@@ -1,5 +1,6 @@
 {
   "id": "rabbit-in-the-moon",
+  "status": "approved",
   "title": {
     "en": "The Rabbit in the Moon",
     "th": "กระต่ายในดวงจันทร์"
@@ -8,6 +9,15 @@
     "en": "Kindness doesn't have to be big. Giving with your whole heart is the greatest gift.",
     "th": "ความดีไม่ต้องยิ่งใหญ่ การให้ด้วยหัวใจทั้งหมดของเรา คือของขวัญที่ดีที่สุด"
   },
+  "summary": {
+    "en": "Four forest friends want to share food with a hungry old traveler. The little Rabbit has nothing to give but grass... so what will she do?",
+    "th": "สี่สหายในป่าอยากแบ่งปันอาหารให้คุณตานักเดินทางที่หิวโหย แต่กระต่ายน้อยมีแค่หญ้า แล้วกระต่ายน้อยจะทำอย่างไรนะ"
+  },
+  "thumbnailTitle": {
+    "en": "The Rabbit\nin the Moon",
+    "th": "กระต่าย\nในดวงจันทร์"
+  },
+  "thumbnailScene": "moon",
   "shortScenes": [
     "gift",
     "magic",

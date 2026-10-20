@@ -1,0 +1,204 @@
+{
+  "name": "Fufu C · เฝ้าระบบ",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 30
+            }
+          ]
+        }
+      },
+      "id": "c2ba5150-9557-5403-9fcb-02b2104d943d",
+      "name": "ทุก 30 นาที",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "dad21115-062c-5f0f-ad77-7f68a2f31ec6",
+              "name": "workerBase",
+              "value": "http://host.docker.internal:4310",
+              "type": "string"
+            },
+            {
+              "id": "be952a35-4215-5e9b-aa24-e98e3d26b5bc",
+              "name": "telegramChatId",
+              "value": "PUT_YOUR_TELEGRAM_CHAT_ID",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "86211f58-0ddf-54f0-9ce4-e3e1fd2514a9",
+      "name": "Settings",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        200,
+        300
+      ],
+      "notes": "Edit these values after importing"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $('Settings').first().json.workerBase }}/health",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "id": "99c2046b-5135-59a7-bf07-72aca364ff62",
+      "name": "Worker: health",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        400,
+        300
+      ],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "182f7278-2974-5705-8b21-eaef92aef443",
+              "leftValue": "={{ $json.runningMinutes }}",
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              },
+              "rightValue": 90
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "0b59e008-f000-50c1-92d5-d234e2523e6b",
+      "name": "งานค้างนานไหม?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        620,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Settings').first().json.telegramChatId }}",
+        "text": "=⚠️ งาน {{ $json.running.type }} ของ {{ $json.running.story }} รันมา {{ $json.runningMinutes }} นาทีแล้ว\nเช็กเครื่องว่าหลับหรือ worker ค้างไหม",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "e10a6b70-97e8-532f-9047-ee9a6bcac26d",
+      "name": "แจ้ง: งานค้าง",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        840,
+        160
+      ],
+      "webhookId": "18edd453-7cd9-5b44-bed7-a3b84d8f0ed7"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Settings').first().json.telegramChatId }}",
+        "text": "=🚨 Studio Worker ไม่ตอบ\n{{ $json.error?.message || $json.error || '' }}\nเปิดเครื่องแล้วรัน npm run worker",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "5537636b-51c7-5e17-af4c-4a9eaf3fca1f",
+      "name": "แจ้ง: Worker ไม่ตอบ",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        620,
+        420
+      ],
+      "webhookId": "91f12cb9-f908-54c1-8936-e2b8ecd34660"
+    }
+  ],
+  "connections": {
+    "ทุก 30 นาที": {
+      "main": [
+        [
+          {
+            "node": "Settings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Settings": {
+      "main": [
+        [
+          {
+            "node": "Worker: health",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Worker: health": {
+      "main": [
+        [
+          {
+            "node": "งานค้างนานไหม?",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "แจ้ง: Worker ไม่ตอบ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "งานค้างนานไหม?": {
+      "main": [
+        [
+          {
+            "node": "แจ้ง: งานค้าง",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Bangkok"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": false
+  }
+}

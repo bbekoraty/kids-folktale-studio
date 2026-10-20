@@ -3,25 +3,19 @@ import type { LangCode } from "../config/languages";
 /** Text in every supported language. Missing languages fall back to English. */
 export type Localized = Partial<Record<LangCode, string>> & { en: string };
 
-export type BackgroundKey =
-  | "stage"
-  | "forest-day"
-  | "forest-evening"
-  | "campfire"
-  | "night-moon";
+/* Everything the renderer can draw. Story JSON may only use these keys (checked by src/lib/validate.ts). */
+export const BACKGROUNDS = ["stage", "forest-day", "forest-evening", "campfire", "night-moon"] as const;
+export const CHARACTER_KEYS = ["fufu", "rabbit", "monkey", "otter", "jackal", "oldman", "phra-in"] as const;
+export const PROPS = ["fish", "mango", "corn", "fire", "petals", "moon-rabbit", "grass"] as const;
+export const ACTIONS = ["idle", "wave", "hop", "walk-in", "bow", "jump", "glow"] as const;
+export const TRANSITIONS = ["cloud", "iris", "sparkle", "fade"] as const;
+export const STORY_STATUSES = ["draft", "approved", "published"] as const;
 
-export type CharacterKey =
-  | "fufu"
-  | "rabbit"
-  | "monkey"
-  | "otter"
-  | "jackal"
-  | "oldman"
-  | "phra-in";
-
-export type PropKey = "fish" | "mango" | "corn" | "fire" | "petals" | "moon-rabbit" | "grass";
-
-export type Action = "idle" | "wave" | "hop" | "walk-in" | "bow" | "jump" | "glow";
+export type BackgroundKey = (typeof BACKGROUNDS)[number];
+export type CharacterKey = (typeof CHARACTER_KEYS)[number];
+export type PropKey = (typeof PROPS)[number];
+export type Action = (typeof ACTIONS)[number];
+export type StoryStatus = (typeof STORY_STATUSES)[number];
 
 export interface CastMember {
   character: CharacterKey;
@@ -71,7 +65,7 @@ export interface Scene {
   cast: CastMember[];
   props?: PropPlacement[];
   /** How this scene enters: cloud | iris | sparkle | fade (auto when omitted). */
-  transition?: "cloud" | "iris" | "sparkle" | "fade";
+  transition?: (typeof TRANSITIONS)[number];
   /** Background music track in public/music (auto from the background when omitted). */
   music?: string;
   /** Slow camera zoom from 1 to this value over the scene. */
@@ -81,8 +75,18 @@ export interface Scene {
 
 export interface Story {
   id: string;
+  /** draft → approved → published (managed by the n8n workflows). */
+  status?: StoryStatus;
   title: Localized;
   moral: Localized;
+  /** One or two sentences for the YouTube description. */
+  summary?: Localized;
+  /** Title on the thumbnail; use "\n" to choose where the line breaks. Defaults to title. */
+  thumbnailTitle?: Localized;
+  /** Scene drawn on the YouTube thumbnail. */
+  thumbnailScene?: string;
+  /** New characters/backgrounds/props the story would need (filled by the draft step). */
+  assetRequests?: string[];
   scenes: Scene[];
   /** Scene ids used for the 9:16 Short (keep under ~55 s). */
   shortScenes: string[];

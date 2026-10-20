@@ -9,6 +9,7 @@
  * Any other --flag is passed straight to `remotion render`, e.g.
  *   npm run render -- --story rabbit-in-the-moon --lang th --concurrency=2 --log=verbose
  */
+import "dotenv/config";
 import { execFileSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync } from "node:fs";
 import { LANG_CODES, type LangCode } from "../src/config/languages";
@@ -28,6 +29,9 @@ const passthrough = args.filter(
   (a, i) => a.startsWith("--") && !OWN_FLAGS.includes(a) && !OWN_WITH_VALUE.includes(a) && !OWN_WITH_VALUE.includes(args[i - 1] ?? ""),
 );
 const browser = process.env.REMOTION_BROWSER ? [`--browser-executable=${process.env.REMOTION_BROWSER}`] : [];
+if (process.env.RENDER_CHROME_MODE && !passthrough.some((a) => a.startsWith("--chrome-mode"))) {
+  passthrough.push(`--chrome-mode=${process.env.RENDER_CHROME_MODE}`);
+}
 
 mkdirSync("out", { recursive: true });
 for (const story of storyIds) {

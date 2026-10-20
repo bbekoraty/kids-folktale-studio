@@ -84,3 +84,33 @@ scripts/                  tts / render / still
 
 - ช่องเด็กต้องตั้งค่า **Made for Kids** ตอนอัปโหลด
 - เพลงประกอบต้องมีไลเซนส์ (เช่น YouTube Audio Library) วางไว้ใน `public/music/`
+
+## อัตโนมัติด้วย n8n
+
+ภาพรวมและเหตุผลการออกแบบอยู่ในเอกสาร "Workflow อัตโนมัติ n8n — Fufu Tales" ส่วนนี้สรุปเฉพาะวิธีใช้
+
+**Studio Worker** (`npm run worker`) คือ HTTP API ที่ n8n เรียกเพื่อสั่งงานหนัก ทุก request ต้องมี `Authorization: Bearer <WORKER_TOKEN>`
+
+| Method | Path | ใช้ทำอะไร |
+| --- | --- | --- |
+| GET | `/health` | สถานะ worker และงานที่กำลังรัน |
+| GET | `/stories` | รายชื่อนิทาน สถานะ ภาษาที่มีเสียงแล้ว |
+| GET | `/stories/:id` | บทเต็ม + ผลตรวจ (`?preview=th` ได้ข้อความย่อ) |
+| POST | `/stories/draft` | `{title, synopsis, moral, notes, callbackUrl}` ให้ Claude ร่างบท |
+| POST | `/stories/:id/status` | `{status: "draft" \| "approved" \| "published"}` |
+| POST | `/jobs` | `{type: "tts" \| "stills" \| "render" \| "thumbnail", story, langs, lang, formats, callbackUrl}` |
+| GET | `/jobs`, `/jobs/:id` | รายการงาน / สถานะงาน |
+| GET | `/files/<path>` | ไฟล์ใน `out/` (วิดีโอ ภาพนิ่ง thumbnail) |
+
+งานทุกตัวเข้าคิวทีละงาน เมื่อเสร็จ worker จะ POST ผลไปที่ `callbackUrl` (ใน n8n คือ `$execution.resumeUrl` ของโหนด Wait) โดยเปลี่ยนโดเมนเป็น `N8N_INTERNAL_URL` เพื่อไม่ต้องผ่าน Cloudflare Access
+
+**Workflows** (โฟลเดอร์ `n8n/`, Import ผ่านเมนู Workflows → Import from File)
+
+- `A-draft-story.json` ฟอร์มกรอกนิทาน → Claude ร่างบท → อนุมัติใน Telegram
+- `B-produce-episode.json` เสียง → ภาพนิ่งตรวจ → เรนเดอร์ → อัปโหลด YouTube แบบ Private + Made for Kids → บันทึก Google Sheet
+- `C-health-check.json` เช็ก worker ทุก 30 นาที
+
+หลัง Import: เปิดโหนด **Settings** ในแต่ละ workflow ใส่ `telegramChatId` (และ `sheetId` ใน B) แล้วเลือก credential ในโหนดที่ขึ้นเตือน
+แก้ workflow ได้ใน `n8n/build-workflows.py` แล้วรัน `python3 n8n/build-workflows.py`
+
+**ติดตั้ง n8n**: `cd n8n && cp .env.n8n.example .env` ใส่โดเมน แล้ว `docker compose up -d` (ถ้าจะรัน cloudflared ใน Docker ด้วย ใช้ `docker compose --profile tunnel up -d`)
